@@ -11,7 +11,7 @@ import argparse
 import hpbandster.core.nameserver as hpns
 import hpbandster.core.result as hpres
 
-from hpbandster.optimizers import BOHB as BOHB
+from hpbandster.optimizers import GPEIMCMCHB
 from hpbandster.examples.commons import MyWorker
 
 
@@ -19,7 +19,7 @@ from hpbandster.examples.commons import MyWorker
 parser = argparse.ArgumentParser(description='Example 1 - sequential and local execution.')
 parser.add_argument('--min_budget',   type=float, help='Minimum budget used during the optimization.',    default=9)
 parser.add_argument('--max_budget',   type=float, help='Maximum budget used during the optimization.',    default=243)
-parser.add_argument('--n_iterations', type=int,   help='Number of iterations performed by the optimizer', default=4)
+parser.add_argument('--n_iterations', type=int,   help='Number of iterations performed by the optimizer', default=1)
 args=parser.parse_args()
 
 
@@ -43,7 +43,7 @@ w.run(background=True)
 # Now we can create an optimizer object and start the run.
 # Here, we run BOHB, but that is not essential.
 # The run method will return the `Result` that contains all runs performed.
-bohb = BOHB(  configspace = w.get_configspace(),
+bohb = GPEIMCMCHB(  configspace = w.get_configspace(),
               run_id = 'example1', nameserver='127.0.0.1',
               min_budget=args.min_budget, max_budget=args.max_budget
            )

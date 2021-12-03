@@ -1,2 +1,6 @@
 __pycache__
 *.swp
+data/*
+hpbandster/examples/results.json
+hpbandster/examples/configs.json
+hpbandster/examples/HPB_run_None_pyro.pkl
