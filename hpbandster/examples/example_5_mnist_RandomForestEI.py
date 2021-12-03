@@ -72,7 +72,7 @@ w = worker(run_id=args.run_id, host=host, nameserver=ns_host, nameserver_port=ns
 w.run(background=True)
 
 # Run an optimizer
-gpeimcmchb = RandomForestEI(  configspace = worker.get_configspace(),
+randomforestei = RandomForestEI(  configspace = worker.get_configspace(),
 			  run_id = args.run_id,
 			  host=host,
 			  nameserver=ns_host,
@@ -80,7 +80,7 @@ gpeimcmchb = RandomForestEI(  configspace = worker.get_configspace(),
 			  result_logger=result_logger,
 			  min_budget=args.min_budget, max_budget=args.max_budget, 
 		   )
-res = gpeimcmchb.run(n_iterations=args.n_iterations)
+res = randomforestei.run(n_iterations=args.n_iterations)
 
 # store results
 with open(os.path.join(args.shared_directory, 'results.pkl'), 'wb') as fh:
