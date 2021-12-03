@@ -87,6 +87,6 @@ with open(os.path.join(args.shared_directory, 'results.pkl'), 'wb') as fh:
 	pickle.dump(res, fh)
 
 # shutdown
-gpeimcmchb.shutdown(shutdown_workers=True)
+randomforestei.shutdown(shutdown_workers=True)
 NS.shutdown()
 
