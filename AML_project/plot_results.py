@@ -3,7 +3,7 @@ import hpbandster.core.result as hpres
 import hpbandster.visualization as hpvis
 import numpy as np
 
-def randomforest_randomsearch_BOHB_plot(problem_n, randomforest_runs, randomsearch_runs, bohb_runs, get_loss_from_run_fn=lambda r: r.loss, cmap=plt.get_cmap("tab10"), show=False):
+def plot_problem_time(problem_n, randomforest_runs, randomsearch_runs, bohb_runs, get_loss_from_run_fn=lambda r: r.loss, cmap=plt.get_cmap("tab10"), show=False):
     data = {}
 
     for i in ["randomforest", "randomsearch", "BOHB"]:
@@ -37,13 +37,62 @@ def randomforest_randomsearch_BOHB_plot(problem_n, randomforest_runs, randomsear
 
     for i, j in enumerate(["randomforest", "randomsearch", "BOHB"]):
         data[j] = np.array(data[j])
+        iterations = np.arange(0, len(data[j][:, 0]))
         ax.scatter(data[j][:, 0], data[j][:, 1], color=cmap(i), label=j)
-
         ax.step(data[j][:, 0], np.minimum.accumulate(
             data[j][:, 1]), where='post')
 
     ax.set_title('Losses for different budgets over time for problem {0}'.format(problem_n))
     ax.set_xlabel('wall clock time [s]')
+    ax.set_ylabel('loss')
+    ax.legend()
+    if show:
+        plt.show()
+
+    return(fig, ax)
+
+def plot_problem_iterations(problem_n, randomforest_runs, randomsearch_runs, bohb_runs, get_loss_from_run_fn=lambda r: r.loss, cmap=plt.get_cmap("tab10"), show=False):
+    data = {}
+
+    for i in ["randomforest", "randomsearch", "BOHB"]:
+        data[i] = []
+
+    for r in randomforest_runs:
+        if r.loss is None:
+            continue
+        t = r.time_stamps['finished']
+        l = get_loss_from_run_fn(r)
+        data["randomforest"].append((t, l))
+
+    for r in randomsearch_runs:
+        if r.loss is None:
+            continue
+        t = r.time_stamps['finished']
+        l = get_loss_from_run_fn(r)
+        data["randomsearch"].append((t, l))
+
+    for r in bohb_runs:
+        if r.loss is None:
+            continue
+        t = r.time_stamps['finished']
+        l = get_loss_from_run_fn(r)
+        data["BOHB"].append((t, l))
+
+    for i in ["randomforest", "randomsearch", "BOHB"]:
+        data[i].sort()
+
+    fig, ax = plt.subplots()
+
+    for i, j in enumerate(["randomforest", "randomsearch", "BOHB"]):
+        data[j] = np.array(data[j])
+        iterations = np.arange(0, len(data[j][:, 0]))
+        ax.scatter(iterations, data[j][:, 1], color=cmap(i), label=j)
+        ax.step(iterations, np.minimum.accumulate(
+            data[j][:, 1]), where='post')
+
+
+    ax.set_title('Losses for different budgets over iterations for problem {0}'.format(problem_n))
+    ax.set_xlabel('iterations')
     ax.set_ylabel('loss')
     ax.legend()
     if show:
@@ -213,7 +262,6 @@ def normalized_plot(problems, get_loss_from_run_fn=lambda r: r.loss, cmap=plt.ge
     ax.bar(ranks + bar_width, np.bincount(loss_ranks['randomforest'])[1:], bar_width, label='BOHB-RF')
     ax.bar(ranks + 2 * bar_width, np.bincount(loss_ranks['BOHB'])[1:], bar_width, label='BOHB')
     
-
     # Prints some stats
     plt.xlabel("Rank")
     plt.ylabel("Number of occurences")
@@ -244,17 +292,18 @@ def normalized_plot(problems, get_loss_from_run_fn=lambda r: r.loss, cmap=plt.ge
 problems = [3, 6, 11, 12, 14, 16, 18, 20, 21, 22, 23, 28, 43, 45, 49, 53, 58, 219, 2074]
 # print(len(problems))
 
-normalized_plot(problems=problems)
+# normalized_plot(problems=problems)
 
 
 # for problem in problems:
 #     print(problem)
-#     result = {}
-#     all_runs = {}
-#     for i in ["randomforest", "randomsearch", "BOHB"]:
-#         result[i] = hpres.logged_results_to_HBS_result('./results/results{0}{1}'.format(problem, i))
-#         all_runs[i] = result[i].get_all_runs()
+problem = 2074
+result = {}
+all_runs = {}
+for i in ["randomforest", "randomsearch", "BOHB"]:
+    result[i] = hpres.logged_results_to_HBS_result('./results/results{0}{1}'.format(problem, i))
+    all_runs[i] = result[i].get_all_runs()
 
-#     randomforest_randomsearch_BOHB_plot(problem, all_runs['randomforest'], all_runs['randomsearch'], all_runs['BOHB'])
+plot_problem_iterations(problem, all_runs['randomforest'], all_runs['randomsearch'], all_runs['BOHB'])
 
-#     plt.show()
+plt.show()
