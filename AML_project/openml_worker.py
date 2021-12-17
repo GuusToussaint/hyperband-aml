@@ -97,20 +97,6 @@ class PyTorchWorker(Worker):
                      }
         })
 
-        # train_accuracy = self.evaluate_accuracy(model, self.train_loader)
-        # validation_accuracy = self.evaluate_accuracy(
-        #     model, self.validation_loader)
-        # test_accuracy = self.evaluate_accuracy(model, self.test_loader)
-
-        # return ({
-        #         'loss': 1-validation_accuracy,  # remember: HpBandSter always minimizes!
-        #         'info': {'test accuracy': test_accuracy,
-        #                  'train accuracy': train_accuracy,
-        #                  'validation accuracy': validation_accuracy,
-        #                  'number of parameters': model.number_of_parameters(),
-        #                  }
-        #         })
-
     def evaluate_loss(self, model, data_loader):
         # print("data_loader length", len(data_loader), "\n", data_loader)
         model.eval()
@@ -123,20 +109,6 @@ class PyTorchWorker(Worker):
                 loss.append(f(output.to(torch.float32),
                             y.to(torch.float32)).item())
         return(float(np.mean(loss)))
-
-    # def evaluate_accuracy(self, model, data_loader):
-    #     model.eval()
-    #     correct = 0
-    #     with torch.no_grad():
-    #         for x, y in data_loader:
-    #             output = model(x)
-    #             # test_loss += F.nll_loss(output, target, reduction='sum').item() # sum up batch loss
-    #             # get the index of the max log-probability
-    #             pred = output.max(1, keepdim=True)[1]
-    #             correct += pred.eq(y.view_as(pred)).sum().item()
-    #     #import pdb; pdb.set_trace()
-    #     accuracy = correct/len(data_loader.sampler)
-    #     return(accuracy)
 
     @staticmethod
     def get_configspace():
