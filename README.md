@@ -24,3 +24,9 @@ It contains a quickstart guide with worked out examples to get you started in di
 Check it out if you are interest in applying one of the implemented optimizers to your problem.
 
 We have also written a [blogpost](https://www.automl.org/blog_bohb/) showcasing the results from our ICML paper.
+
+
+## Reproduce the results from the BOHB-RF assignment for AML
+
+Run the openml_evaluate.py file.
+To create the plots from the report, run the plot_results.py file.
