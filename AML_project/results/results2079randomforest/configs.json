@@ -1,0 +1,1 @@
+[[0, 0, 0], {"batch_size": 15, "dropout_rate": 0.328047595722836, "lr": 1.8877478914137577e-05, "num_fc_units": 59, "num_layers": 5, "weight_decay": 0.0700587757264952}, {"model_based_pick": true}]
